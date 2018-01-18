@@ -3,15 +3,15 @@ This project demonstrates NESTED LOOPS (i.e., loops within loops)
 in the context of TWO-DIMENSIONAL GRAPHICS.
 
 Authors: David Mutchler, Valerie Galluzzi, Mark Hays, Amanda Stouder,
-         their colleagues and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+         their colleagues and Charles Nourse.
+"""  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 import rosegraphics as rg
 
 
 def main():
     """ Calls the other functions to demonstrate them. """
-    run_test_draw_L()
+    #run_test_draw_L()
     run_test_draw_wall_on_right()
 
 
@@ -80,9 +80,43 @@ def draw_L(window, circle, r, c):
     and m and n are small, positive integers.
     """
     # ------------------------------------------------------------------
-    # TODO: 2. Implement and test this function.
+    # DONE: 2. Implement and test this function.
     #     The testing code is already written for you (above).
     # ------------------------------------------------------------------
+
+    original_x = circle.center.x
+    original_y = circle.center.y
+    radius = circle.radius
+    color = circle.fill_color
+    #'column' part of L
+    x = original_x
+    y = original_y
+    for i in range(r):  # Loop through the rows
+        for j in range(3):  # Loop through the columns
+            new_circle = rg.Circle(rg.Point(x, y), radius)
+            new_circle.fill_color = color
+            new_circle.attach_to(window)
+            window.render(0.1)
+
+            x = x + (2 * radius)  # Move x to the right, for next circle
+
+        y = y + 2 * radius  # Move y down, for the next row of circles
+        x = original_x  # Reset x to the left-edge, for the next row
+    #'row' part of L
+    x = original_x
+    y = original_y + r*(2 * radius) - 3*(2 * radius)
+    for i in range(3):  # Loop through the rows
+        for j in range(c + 3):  # Loop through the columns
+            new_circle = rg.Circle(rg.Point(x, y), radius)
+            new_circle.fill_color = color
+            new_circle.attach_to(window)
+
+            window.render(0.1)
+
+            x = x + (2 * radius)  # Move x to the right, for next circle
+
+        y = y + 2 * radius  # Move y down, for the next row of circles
+        x = original_x  # Reset x to the left-edge, for the next row
 
 
 def run_test_draw_wall_on_right():
@@ -121,10 +155,32 @@ def draw_wall_on_right(rectangle, n, window):
     and n is a small, positive integer.
     """
     # ------------------------------------------------------------------
-    # TODO: 3. Implement and test this function.
+    # DONE: 3. Implement and test this function.
     #     The testing code is already written for you (above).
     # ------------------------------------------------------------------
 
+    p1i = rectangle.get_upper_right_corner()
+    p2i = rectangle.get_lower_left_corner()
+    w = rectangle.get_width()
+    h = rectangle.get_height()
+
+    p1 = p1i.clone()
+    p2 = p2i.clone()
+
+    for j in range(n):  # Loop through the rows
+        for _ in range(j + 1):  # Loop through the columns
+
+            new_rect = rg.Rectangle(p1, p2)
+            new_rect.attach_to(window.initial_canvas)
+            window.render(0.1)
+
+            p1.x += -w
+            p2.x += -w
+
+        p1.y += h  # Move y down
+        p2.y += h
+        p1.x = p1i.x  # Reset x to the left-edge, for the next row
+        p2.x = p2i.x
 
 # ----------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
